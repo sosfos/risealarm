@@ -10,6 +10,8 @@ import time
 from random import random
 from os.path import join
 
+from kivy.uix.textinput import TextInput
+
 class MainWidget(BoxLayout):
     pass
 
@@ -22,25 +24,39 @@ class AlarmApp(App):
         
         #data_dir = getattr(self, 'user_data_dir')
         
-        self.sound = SoundLoader.load('sounds/3.mp3')
-        
+        self.sound = SoundLoader.load('sounds/3.wav')
+
     def build(self):
-        return MainWidget()     
+        root = MainWidget()
+        self.root = root
+        return self.root     
         
     def alarm(self,value=0):
         self.sound.play()
         
     def start_alert(self,value=0):
+        if self.clock is not None:
+            self.clock.cancel()
         self.clock = Clock.schedule_interval(self.check_alert,10)
+    
+    def stop_alert(self,dt=0):
+        if self.clock is not None:
+            self.clock.cancel()
 
-    def check_alert(self,dt):
-        dt = list(time.localtime())  
+    def check_alert(self,dt=0):
+        dt = list(time.localtime())
         h = dt[3]
         m = dt[4]
-        if h==21 and m<30:
-            self.sound.volume = random()
+        ht = int(self.root.input_hour.text)
+        mt = int(self.root.input_minute.text)
+        if h== ht and m >= mt and m < mt + 10 :
+            self.sound.volume = 0
+            Clock.schedule_interval(self.change_volume,30)
             self.alarm()
-
+            
+    def change_volume(self,dt):        
+        if self.sound.volume < 1:
+            self.sound.volume += 0.1
                 
 if __name__ == '__main__':
     AlarmApp().run()

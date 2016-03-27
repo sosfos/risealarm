@@ -1,7 +1,23 @@
 <MainWidget>:
+    input_hour:_input_hour
+    input_minute:_input_minute
+    
+    orientation:'vertical'
+    BoxLayout:
+        size_hine:1,None
+        height:80
+        orientation:'horizontal'
+        TextInput:
+            id:_input_hour
+        TextInput:
+            id:_input_minute
     Button:
+        size_hine:1,None
+        height:80
         text:'Enable'
         on_press:app.start_alert()
     Button:
-        text:'Alarm'
-        on_press:app.alarm()
+        size_hine:1,None
+        height:80
+        text:'Disable'
+        on_press:app.stop_alert()
